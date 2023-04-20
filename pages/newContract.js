@@ -1,6 +1,3 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-//import ethers from ethers
 import { useState } from 'react';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
@@ -406,146 +403,131 @@ var provider;
 var MyContract;
 var MyContractwSigner;
 
-const checkseller = async() => {
+const createbonusfunc = async () => {
+	var APN = document.getElementById("parcelid").value;
+	var Amount = document.getElementById("bonusamount").value;
+	var Realtor = document.getElementById("receiverwallet").value;
+	var Sellby = new Date(document.getElementById("sellbydate").value);
+
+	var Selltimestamp = Math.floor(Sellby.getTime()/1000);
 	
-	var APN = '290-15-153';
+	console.log('Sellby = '+Selltimestamp);
 	
 	if (typeof window.ethereum !== 'undefined') {
-		console.log('MetaMask is installed!');
+		console.log('Metamask is installed!');
 		
 	}
-	console.log('Metamask enabled');
+	var myprovider = window.ethereum;
+	
 	const accounts = await window.ethereum.send(
-    "eth_requestAccounts"
-  )
-  //console.log('accounts', accounts.result[0]);
-  const address = accounts.result[0];
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner(address);
-  //console.log(signer);
-  //var blockNumber = await provider.getBlockNumber();
-  //console.log('Block number = '+ blockNumber);
-  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
-  //console.log(MyContract);
-  MyContractwSigner = await MyContract.connect(signer);
-	var result = await MyContract.getBonusseller(APN);
-	//document.getElementById("myresponse").value=result;
-  console.log(result);
+        "eth_requestAccounts"
+      )
+      
+      const address = accounts.result[0];
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(address);
+
+      MyContract = new ethers.Contract(NFTcontract, myabi, provider);
+
+      MyContractwSigner = await MyContract.connect(signer);
+	MyContractwSigner.createBonus(APN,Realtor,Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
+					console.log(receipt);
+					
+				}).catch(err => {
+					console.error(err);
+					
+				});
 }
-//test
 
-
-
-const HomePage = () => {
-	
-	const [isLoggedin, setLoggedin] = useState(false);
-	const [APN, setAPN] = useState("APN number");
-  	const [buttonText, setButtonText] = useState("Connect Wallet");
-	const [APNaddress, setAPNAddress] = useState("Address to be checked");
-	const [APNaddresscheck, setAPNAddresscheck] = useState("");
-
-	  const login = async () => {
-		console.log('trying login function');
-		
-		
-		try {
-		  const accounts = await window.ethereum.send(
-			"eth_requestAccounts"
-		  )
-		  //console.log('accounts', accounts.result[0]);
-		  const address = accounts.result[0];
-		  provider = new ethers.providers.Web3Provider(window.ethereum);
-		  //var blockNumber = await provider.getBlockNumber();
-		  //console.log('Block number = '+ blockNumber);
-		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
-		  //buttontext = address;
-		  setButtonText(address);
-		}
-		catch (error) {
-			alert('Please Install Metamask Wallet')
-			return;
-		}
-	}
-	
-	const checkaddress = async()=>{
-		var myAPN = document.getElementById("myAPNInput").value; 
-		setAPN(myAPN);
-		var finalurl=zillowurladdress+myAPN;
-		console.log(finalurl);
-		var result = await axios.get(finalurl);
-		console.log(result);
-		var resultdate2 = await result['data']['bundle'][0]['parcels'][0]['full'];
-		console.log(resultdate2);
-		
-		setAPNAddress(resultdate2);
-		console.log(APNaddress);
-		const myText = document.getElementById("addresscheck");
-		myText.value = resultdate2;
-		
-	} 
-
-	const copyToClipboard = async () => {
-	  // Logic to copy value to clipboard
-	  //const valueToCopy = "Hello, clipboard!";
-	  //navigator.clipboard.writeText(valueToCopy);
-	  let clipboardresult = await navigator.clipboard.readText();
-	  setAPN(clipboardresult);
-	  const myInput = document.getElementById("myAPNInput");
-	  console.log(APN);
-	  myInput.value=APN;
-	  
-	};
+const MyForm = () => {
+    const today = new Date().toISOString().substr(0, 10); // Get today's date in yyyy-mm-dd format
   
-	return (
-	  <div className="bg-blue-500 min-h-screen">
-		<header className="flex items-center justify-between px-8 py-4">
-		  <h1 className="text-white text-xl font-bold">Smartcrow</h1>
-		  <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={login}>
-		  	{buttonText}
-		  </button>
-		</header>
-		<main className="flex flex-col items-center justify-center py-16">
-		  <section className="text-white text-center mb-8">
-			
-			<p>Please enter your APN</p>
-		  </section>
-		  <section className="flex items-center mb-8">
-			<input
-			  type="text"
-			  id="myAPNInput"
-			  className="w-96 bg-white rounded-l px-4 py-2 focus:outline-none"
-			  placeholder="Paste clipboard value here..."
-			/>
-			<button
-			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-r"
-			  onClick={copyToClipboard}
-			>
-			  Paste Clipboard
-			</button>
-			<button
-			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-r"
-			  onClick={checkaddress}
-			>
-			  Check Address
-			</button>
-		  </section>
-		  <section className="flex items-center">
-		  <textarea id="addresscheck" className="resize-none w-full h-24 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-		  </section>
-		  <section className="flex justify-center">
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2">
-			  New Contract
-			</button>
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2">
-			  Existing Contract
-			</button>
-		  </section>
-		</main>
-	  </div>
-	);
+    return (
+      <div className="bg-blue-500 min-h-screen">
+        <nav className="flex justify-between items-center bg-gray-900 p-4">
+          <h1 className="text-white font-bold text-lg">Smartcrow</h1>
+          <button className="bg-blue-700 text-white px-4 py-2 rounded">Connect Wallet</button>
+        </nav>
+        <div className="container mx-auto p-6">
+          <div className="flex flex-col gap-6">
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="text-input" className="font-bold">
+                APN
+              </label>
+              <input
+                type="text"
+                id="parcelid"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              
+              <textarea
+                id="textarea"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                rows={3}
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="number-input" className="font-bold">
+                Amount (ETH)
+              </label>
+              <input
+                type="number"
+                id="bonusamount"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="date-input" className="font-bold">
+                Start Date
+              </label>
+              <input
+                type="date"
+                id="startdate"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                defaultValue={today}
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="date-input2" className="font-bold">
+                Sell By
+              </label>
+              <input
+                type="date"
+                id="sellbydate"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="text-input2" className="font-bold">
+                Sender Wallet
+              </label>
+              <input
+                type="text"
+                id="senderwallet"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+              <label htmlFor="text-input3" className="font-bold">
+                Receiver Wallet
+              </label>
+              <input
+                type="text"
+                id="receiverwallet"
+                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+              />
+            </div>
+            <div className="bg-white p-6 rounded">
+                <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={createbonusfunc}>
+		  	        Create Bonus
+		        </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
   
-  export default HomePage;
-
-  
-
+  export default MyForm;
