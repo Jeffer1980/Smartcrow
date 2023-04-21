@@ -411,7 +411,7 @@ const createbonusfunc = async () => {
 
 	var Selltimestamp = Math.floor(Sellby.getTime()/1000);
 	
-	console.log('Sellby = '+Selltimestamp);
+	//console.log('Sellby = '+Selltimestamp);
 	
 	if (typeof window.ethereum !== 'undefined') {
 		console.log('Metamask is installed!');
