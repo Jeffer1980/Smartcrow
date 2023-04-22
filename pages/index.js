@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
+
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
 const zillowurladdress='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&parcels.apn=';
@@ -517,9 +518,9 @@ const HomePage = () => {
 	};
   
 	return (
-	  <div className="bg-blue-500 min-h-screen">
+	  <div className="bg-blue-700 min-h-screen">
 		<header className="flex items-center justify-between px-8 py-4">
-		  <h1 className="text-white text-xl font-bold">Smartcrow</h1>
+		  <h1 className="text-white text-xl font-bold">SmartCrow</h1>
 		  <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={login}>
 		  	{buttonText}
 		  </button>
@@ -527,38 +528,44 @@ const HomePage = () => {
 		<main className="flex flex-col items-center justify-center py-16">
 		  <section className="text-white text-center mb-8">
 			
-			<p>Please enter your APN</p>
+			<h1 className="text-white text-xl font-bold">Please enter your APN</h1>
 		  </section>
 		  <section className="flex items-center mb-8">
 			<input
 			  type="text"
 			  id="myAPNInput"
-			  className="w-96 bg-white rounded-l px-4 py-2 focus:outline-none"
-			  placeholder="Paste clipboard value here..."
+			  className="w-60 bg-white rounded px-4 py-2 focus:outline-none m-2"
+			  placeholder="Paste APN here..."
 			/>
 			<button
-			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-r"
+			  className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2"
 			  onClick={copyToClipboard}
 			>
-			  Paste Clipboard
+			  <img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
 			<button
-			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-r"
+			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-full"
 			  onClick={checkaddress}
 			>
 			  Check Address
 			</button>
 		  </section>
-		  <section className="flex items-center">
-		  <textarea id="addresscheck" className="resize-none w-full h-24 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+		  <section className="flex items-center mb-6">
+		  	<textarea id="addresscheck" className="resize-none w-96 h-15 px-4 py-4 text-white bg-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"></textarea>
 		  </section>
 		  <section className="flex justify-center">
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2" onClick={handleNewContract}>
-			  New Contract
-			</button>
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2" onClick={handleExistingContract}>
-			  Existing Contract
-			</button>
+		  	<div className="w-full sm:w-1/2 text-center mr-10">
+    			<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4">
+					<img src="/assets/images/newfile.png" alt="New File Image" className="h-12 w-12" />
+    			</button>
+    			<p className="text-white">New Contract</p>
+  			</div>
+  			<div className="w-full sm:w-1/2 text-center">
+    			<button className="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4">
+					<img src="/assets/images/existingfile.png" alt="Existing File Image" className="h-12 w-12" />
+    			</button>
+    			<p className="text-white">Existing Contract</p>
+  			</div>
 		  </section>
 		</main>
 	  </div>
