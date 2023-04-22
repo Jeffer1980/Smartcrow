@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Popup from '@/components/popup';
+import { IM_Fell_English_SC } from 'next/font/google';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -466,7 +467,10 @@ const fetch = async() => {
 
 const withdrawseller = async() => {
 	console.log('Withdraw funds');
-	
+	const today = new Date();
+	console.log('Today = '+today);
+	const todaytimestamp = Math.floor(today.getTime()/1000);
+	console.log('Today timestamp = '+todaytimestamp);
 	var finalurl=zillowurl+APN;
 	var result = await axios.get(finalurl);
 	console.log('Total = '+result['data']['total']);
@@ -496,11 +500,29 @@ const withdrawseller = async() => {
       MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 
       MyContractwSigner = await MyContract.connect(signer);
-	await MyContractwSigner.sellerwithdraw(APN,resulttimestamp).then(receipt => {
-			console.log(receipt);
-		}).catch(err => {
-			console.error(err);
-		});;
+	  var myactive = await MyContract.getBonusActive(APN);
+	  var mysellbydate = await MyContract.getBonussellbydate(APN);
+	  //var myslackdate = mysellbydate + (30*24*3600);
+	  var myslackdate = parseInt(mysellbydate, 10) + (30*24*3600);
+      console.log('sellbydate = '+mysellbydate);
+	  console.log('slackdate = '+myslackdate);
+		//Do initial checks
+		if (todaytimestamp<myslackdate) {
+			console.log('slack time not yet passed');
+        
+        	return 4;
+		}
+		else if (myactive==false){
+			console.log('contract no longer active');
+        
+        	return 3;
+		}
+		else {
+			await MyContractwSigner.sellerwithdraw(APN,resulttimestamp).then(receipt => {
+				console.log(receipt);
+			}).catch(err => {
+				console.error(err);
+			});;}
 }
 
 const withdrawrealtor = async() =>{
@@ -533,7 +555,7 @@ const withdrawrealtor = async() =>{
       MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 
       MyContractwSigner = await MyContract.connect(signer);
-
+	  var myactive = await MyContract.getBonusActive(APN);
       var mystartdate = await MyContract.getBonusstartdate(APN);
       console.log('startdate = '+mystartdate);
       var mysellbydate = await MyContract.getBonussellbydate(APN);
@@ -550,6 +572,12 @@ const withdrawrealtor = async() =>{
         return 2;
       }
       
+	  else if (myactive==false){
+			console.log('contract no longer active');
+        
+        	return 3;
+	  }
+
       else {
 	    await MyContractwSigner.realtorwithdraw(APN,resulttimestamp).then(receipt => {
 			console.log(receipt);
@@ -568,7 +596,8 @@ const MyPage = () => {
     const [astartdate, setStartdate] = useState("");
     const [aactiveflag, setActiveFlag] = useState("");
     const [showPopup, setShowPopup] = useState(false);
-    const [popupResult, setPopupResult] = useState("");
+    const [popupHeader, setPopupHeader] = useState("");
+    const [popupText, setPopupText] = useState("");
 
 
 
@@ -586,7 +615,26 @@ const MyPage = () => {
         var result = await withdrawrealtor();
         console.log(result);
         if (result==1){
-            setPopupResult(result);
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Last record date before bonus start date');
+            setShowPopup(true);
+        }
+
+		else if (result==2){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Last record date later than sell by date');
+            setShowPopup(true);
+        }
+
+		else if (result==3){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Bonus no longer active');
+            setShowPopup(true);
+        }
+
+		else if (result==4){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopup(true);
         }
     }
@@ -640,7 +688,7 @@ const MyPage = () => {
         <nav className="bg-gray-800 p-4">
           <div className="flex items-center justify-between">
             <h1 className="text-white font-bold text-lg">Smartcrow</h1>
-            <button className="bg-blue-700 text-white px-4 py-2 rounded" onClick={handleUpdate}>
+            <button className="bg-blue-700 text-white px-4 py-2 rounded">
               Connect Wallet
             </button>
           </div>
@@ -648,6 +696,9 @@ const MyPage = () => {
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col gap-4">
             <h2 className="text-white text-2xl font-bold">{APN}</h2>
+			<button className="bg-blue-700 text-white px-4 py-2 rounded" onClick={handleUpdate}>
+              Get bonus info
+            </button>
             <div className="bg-white p-6 rounded">
               <div className="flex">
                 <div className="w-1/2">
@@ -686,7 +737,7 @@ const MyPage = () => {
           </div>
         </div>
         {showPopup && (
-                <Popup showModal={showPopup} setShowModal={setShowPopup} result={popupResult} />
+                <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup}/>
                 )}
       </div>
     );
