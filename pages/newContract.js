@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -442,6 +443,11 @@ const createbonusfunc = async () => {
 const MyForm = () => {
     const today = new Date().toISOString().substr(0, 10); // Get today's date in yyyy-mm-dd format
   
+	const router = useRouter();
+	const { SelAPN } = router.query;
+	const {Address} = router.query;
+  	console.log('APN = '+{SelAPN});
+
     return (
       <div className="bg-blue-500 min-h-screen">
         <nav className="flex justify-between items-center bg-gray-900 p-4">
@@ -458,13 +464,15 @@ const MyForm = () => {
                 type="text"
                 id="parcelid"
                 className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+				defaultValue={SelAPN}
               />
             </div>
             <div className="bg-white p-6 rounded">
               
               <textarea
-                id="textarea"
+                id="addresscheck"
                 className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+				defaultValue={Address}
                 rows={3}
               />
             </div>

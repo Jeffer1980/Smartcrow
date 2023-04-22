@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 //import ethers from ethers
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -444,6 +445,8 @@ const HomePage = () => {
 	const [APNaddress, setAPNAddress] = useState("Address to be checked");
 	const [APNaddresscheck, setAPNAddresscheck] = useState("");
 
+	const router = useRouter();
+
 	  const login = async () => {
 		console.log('trying login function');
 		
@@ -495,6 +498,23 @@ const HomePage = () => {
 	  myInput.value=APN;
 	  
 	};
+
+	const handleExistingContract = () => {
+		const data = document.getElementById("myAPNInput").value;
+		if (data=='Paste clipboard value here...'){
+			return 1;
+		}
+		else {router.push(`/existingContract?SelAPN=${data}`);}
+	};
+
+	const handleNewContract = () => {
+		const data = document.getElementById("myAPNInput").value;
+		const data2 = document.getElementById("addresscheck").value;
+		if (data=='Paste clipboard value here...'){
+			return 1;
+		}
+		else {router.push(`/newContract?SelAPN=${data}&Address=${data2}`);}
+	};
   
 	return (
 	  <div className="bg-blue-500 min-h-screen">
@@ -533,10 +553,10 @@ const HomePage = () => {
 		  <textarea id="addresscheck" className="resize-none w-full h-24 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
 		  </section>
 		  <section className="flex justify-center">
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2">
+			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2" onClick={handleNewContract}>
 			  New Contract
 			</button>
-			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2">
+			<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mx-2" onClick={handleExistingContract}>
 			  Existing Contract
 			</button>
 		  </section>

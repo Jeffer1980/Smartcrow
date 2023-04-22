@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Popup from '@/components/popup';
 import { IM_Fell_English_SC } from 'next/font/google';
+import { useRouter } from 'next/router';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -402,7 +403,7 @@ const myabi=[
 const {ethers} = require('ethers');
 const axios = require('axios');
 //Test Value
-const APN = "290-15-153";
+//const APN = "290-15-153";
 
 var provider;
 var MyContract;
@@ -416,7 +417,7 @@ var startdate;
 var activeflag;
 
 
-const fetch = async() => {
+const fetch = async(APN) => {
 	
 	var resultarray=[];
 	    
@@ -465,7 +466,7 @@ const fetch = async() => {
     return resultarray;
 }
 
-const withdrawseller = async() => {
+const withdrawseller = async(APN) => {
 	console.log('Withdraw funds');
 	const today = new Date();
 	console.log('Today = '+today);
@@ -525,7 +526,7 @@ const withdrawseller = async() => {
 			});;}
 }
 
-const withdrawrealtor = async() =>{
+const withdrawrealtor = async(APN) =>{
 	console.log('Withdraw funds');
 	
 	var finalurl=zillowurl+APN;
@@ -599,7 +600,11 @@ const MyPage = () => {
     const [popupHeader, setPopupHeader] = useState("");
     const [popupText, setPopupText] = useState("");
 
-
+	const router = useRouter();
+  	const { SelAPN } = router.query;
+	console.log('APN = '+{SelAPN});
+	const APN = SelAPN;
+	console.log('APN = '+APN);
 
     /*useEffect(()=>{
         const fetchdata = async() => {fetch();}
@@ -612,7 +617,7 @@ const MyPage = () => {
       };
 
     const handleWithdrawRealtor = async() => {
-        var result = await withdrawrealtor();
+        var result = await withdrawrealtor(APN);
         console.log(result);
         if (result==1){
             setPopupHeader('Cannot withdraw');
@@ -640,7 +645,7 @@ const MyPage = () => {
     }
 
     const handleUpdate = async() =>{
-        var resultarray = await fetch();
+        var resultarray = await fetch(APN);
         console.log('returned amount'+resultarray[4]);
         var amountstring = ethers.utils.formatEther( contractamount);
         setAmount(amountstring);
