@@ -555,13 +555,13 @@ const HomePage = () => {
 		  </section>
 		  <section className="flex justify-center">
 		  	<div className="w-full sm:w-1/2 text-center mr-10">
-    			<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4">
+    			<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleNewContract}>
 					<img src="/assets/images/newfile.png" alt="New File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-white">New Contract</p>
   			</div>
   			<div className="w-full sm:w-1/2 text-center">
-    			<button className="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4">
+    			<button className="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleExistingContract}>
 					<img src="/assets/images/existingfile.png" alt="Existing File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-white">Existing Contract</p>

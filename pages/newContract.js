@@ -443,91 +443,170 @@ const createbonusfunc = async () => {
 const MyForm = () => {
     const today = new Date().toISOString().substr(0, 10); // Get today's date in yyyy-mm-dd format
   
+	const [buttonText, setButtonText] = useState("Connect Wallet");
+	const [verified, setVerified] = useState(false);
+
 	const router = useRouter();
 	const { SelAPN } = router.query;
 	const {Address} = router.query;
   	console.log('APN = '+{SelAPN});
 
+	  const login = async () => {
+		//console.log('trying login function');
+		
+		
+		try {
+		  const accounts = await window.ethereum.send(
+			"eth_requestAccounts"
+		  )
+		  //console.log('accounts', accounts.result[0]);
+		  const address = accounts.result[0];
+		  provider = new ethers.providers.Web3Provider(window.ethereum);
+		  //var blockNumber = await provider.getBlockNumber();
+		  //console.log('Block number = '+ blockNumber);
+		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
+		  
+		  setButtonText(address);
+		}
+		catch (error) {
+			alert('Please Install Metamask Wallet')
+			return;
+		}
+	}
+
+	const copyToClipboardseller = async () => {
+		// Logic to copy value to clipboard
+		//const valueToCopy = "Hello, clipboard!";
+		//navigator.clipboard.writeText(valueToCopy);
+		let clipboardresult = await navigator.clipboard.readText();
+		
+		const myInput = document.getElementById("senderwallet");
+		//console.log(APN);
+		myInput.value=clipboardresult;
+		
+	  };
+
+	  const copyToClipboardreceiver = async () => {
+		// Logic to copy value to clipboard
+		//const valueToCopy = "Hello, clipboard!";
+		//navigator.clipboard.writeText(valueToCopy);
+		let clipboardresult = await navigator.clipboard.readText();
+		
+		const myInput = document.getElementById("receiverwallet");
+		//console.log(APN);
+		myInput.value=clipboardresult;
+		
+	  };
+
+	  //verify input data
+	  const verifydata = async() => {
+		const verAPN= document.getElementById("parcelid").value;
+		const verAmount= document.getElementById("bonusamount").value;
+		const verStartdate= document.getElementById("startdate").value;
+		const verSellbydate= document.getElementById("sellbydate").value;
+		const verSeller= document.getElementById("senderwallet").value;
+		const verRealtor= document.getElementById("receiverwallet").value;
+
+		if (verAPN=="" || verAmount==0 || verStartdate=="" || verSellbydate=="" ||verSeller=="" || verRealtor=="") {
+			console.log('Verification failed');
+			setVerified(false);
+		}
+		else{
+			console.log('Verification ok');
+			setVerified(true);
+		}
+
+	  }
     return (
-      <div className="bg-blue-500 min-h-screen">
-        <nav className="flex justify-between items-center bg-gray-900 p-4">
-          <h1 className="text-white font-bold text-lg">Smartcrow</h1>
-          <button className="bg-blue-700 text-white px-4 py-2 rounded">Connect Wallet</button>
+      <div className="bg-blue-700 min-h-screen">
+        <nav className="flex justify-between items-center bg-blue-700 p-4">
+          <h1 className="text-white font-bold text-lg">SmartCrow</h1>
+		  <h1 className="text-white font-bold text-lg">New Contract</h1>
+          <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>{buttonText}</button>
         </nav>
-        <div className="container mx-auto p-6">
-          <div className="flex flex-col gap-6">
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="text-input" className="font-bold">
+        <div className="container mx-auto pb-3">
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center flex-row p-2">
+              <label for="parcelid" className="font-bold mr-4 w-24">
                 APN
               </label>
               <input
                 type="text"
                 id="parcelid"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded py-2 px-3 mt-1 flex-grow"
 				defaultValue={SelAPN}
               />
             </div>
-            <div className="bg-white p-6 rounded">
+            <div className="flex items-center flex-row p-2">
               
               <textarea
                 id="addresscheck"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 bg-gray-700 text-white text-center border rounded w-full py-2 px-3 mt-1"
 				defaultValue={Address}
-                rows={3}
+                rows={2}
               />
             </div>
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="number-input" className="font-bold">
+            <div className="flex items-center flex-row p-2">
+              <label for="bonusamount" className="font-bold mr-4 w-24">
                 Amount (ETH)
               </label>
               <input
                 type="number"
                 id="bonusamount"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
               />
             </div>
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="date-input" className="font-bold">
+            <div className="flex items-center flex-row p-2">
+              <label for="startdate" className="font-bold mr-4 w-24">
                 Start Date
               </label>
               <input
                 type="date"
                 id="startdate"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded py-2 px-3 mt-1 flex-grow"
                 defaultValue={today}
               />
             </div>
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="date-input2" className="font-bold">
+            <div className="flex items-center flex-row p-2">
+              <label for="sellbydate" className="font-bold mr-4 w-24">
                 Sell By
               </label>
               <input
                 type="date"
                 id="sellbydate"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
               />
             </div>
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="text-input2" className="font-bold">
+            <div className="flex items-center flex-row p-2">
+              <label for="senderwallet" className="font-bold mr-4 w-24">
                 Sender Wallet
               </label>
               <input
                 type="text"
                 id="senderwallet"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
               />
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardseller}>
+			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
             </div>
-            <div className="bg-white p-6 rounded">
-              <label htmlFor="text-input3" className="font-bold">
-                Receiver Wallet
+            <div className="flex items-center flex-row p-2">
+              <label htmlFor="receiverwallet" className="font-bold mr-4 w-24">
+                Realtor Wallet
               </label>
               <input
                 type="text"
                 id="receiverwallet"
-                className="border-gray-300 border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
               />
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardreceiver}>
+			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
             </div>
-            <div className="bg-white p-6 rounded">
+            <div className="p-6 flex items-center justify-center">
+				<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mr-4" onClick={verifydata}>
+		  	        Verify data
+		        </button>
                 <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={createbonusfunc}>
 		  	        Create Bonus
 		        </button>
