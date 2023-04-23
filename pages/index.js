@@ -502,10 +502,11 @@ const HomePage = () => {
 
 	const handleExistingContract = () => {
 		const data = document.getElementById("myAPNInput").value;
+		const data2 = document.getElementById("addresscheck").value;
 		if (data=='Paste clipboard value here...'){
 			return 1;
 		}
-		else {router.push(`/existingContract?SelAPN=${data}`);}
+		else {router.push(`/existingContract?SelAPN=${data}&Address=${data2}`);}
 	};
 
 	const handleNewContract = () => {
@@ -539,8 +540,7 @@ const HomePage = () => {
 			/>
 			<button
 			  className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2"
-			  onClick={copyToClipboard}
-			>
+			  onClick={copyToClipboard}>
 			  <img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
 			<button

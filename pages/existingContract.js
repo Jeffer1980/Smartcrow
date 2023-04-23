@@ -602,9 +602,12 @@ const MyPage = () => {
 
 	const router = useRouter();
   	const { SelAPN } = router.query;
+
 	console.log('APN = '+{SelAPN});
 	const APN = SelAPN;
 	console.log('APN = '+APN);
+	const {Address} = router.query;
+	
 
     /*useEffect(()=>{
         const fetchdata = async() => {fetch();}
@@ -618,6 +621,34 @@ const MyPage = () => {
 
     const handleWithdrawRealtor = async() => {
         var result = await withdrawrealtor(APN);
+        console.log(result);
+        if (result==1){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Last record date before bonus start date');
+            setShowPopup(true);
+        }
+
+		else if (result==2){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Last record date later than sell by date');
+            setShowPopup(true);
+        }
+
+		else if (result==3){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Bonus no longer active');
+            setShowPopup(true);
+        }
+
+		else if (result==4){
+            setPopupHeader('Cannot withdraw');
+            setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setShowPopup(true);
+        }
+    }
+
+	const handleWithdrawSeller = async() => {
+        var result = await withdrawseller(APN);
         console.log(result);
         if (result==1){
             setPopupHeader('Cannot withdraw');
@@ -689,26 +720,32 @@ const MyPage = () => {
 
    //fetch();
     return (
-      <div className="bg-blue-500 min-h-screen">
-        <nav className="bg-gray-800 p-4">
+      <div className="bg-blue-700 min-h-screen">
+        <nav className="bg-blue-700 p-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-white font-bold text-lg">Smartcrow</h1>
-            <button className="bg-blue-700 text-white px-4 py-2 rounded">
+            <h1 className="text-white font-bold text-lg">SmartCrow</h1>
+            <button className="bg-white text-blue-700 px-4 py-2 rounded">
               Connect Wallet
             </button>
           </div>
         </nav>
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col gap-4">
-            <h2 className="text-white text-2xl font-bold">{APN}</h2>
-			<button className="bg-blue-700 text-white px-4 py-2 rounded" onClick={handleUpdate}>
+            <h2 className="text-white text-2xl font-bold">APN# {APN}</h2>
+			<textarea
+                id="addresscheck"
+                className="border-gray-300 bg-gray-700 text-white text-center border rounded w-full py-2 px-3 mt-1"
+				defaultValue={Address}
+                rows={2}
+              />
+			<button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={handleUpdate}>
               Get bonus info
             </button>
-            <div className="bg-white p-6 rounded">
+            <div className="p-6 rounded">
               <div className="flex">
                 <div className="w-1/2">
                  
-                  <ul className="list-inside">
+                  <ul className="list-inside text-white">
                     <li>Amount</li>
                     <li>Start date</li>
                     <li>Sell by</li>
@@ -717,7 +754,7 @@ const MyPage = () => {
                     <li>Still active</li>
                   </ul>
                 </div>
-                <div className="w-1/2 text-right">
+                <div className="w-1/2 text-right text-white">
                   
                   <ul className="list-inside">
                     <li id="contractamount">{acontractamount}</li>
@@ -730,13 +767,19 @@ const MyPage = () => {
                 </div>
               </div>
             </div>
-            <div className="bg-white p-6 rounded flex justify-between">
-              <button className="bg-blue-700 text-white px-4 py-2 rounded" onClick={withdrawseller}>
-                Withdraw as sender
-              </button>
-              <button className="bg-red-700 text-white px-4 py-2 rounded" onClick={handleWithdrawRealtor}>
-                Withdraw as receiver
-              </button>
+            <div className="p-6 rounded flex justify-between">
+				<div className="w-full sm:w-1/2 text-center mr-10">
+    				<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
+						<img src="/assets/images/sender.png" alt="New File Image" className="h-12 w-12" />
+    				</button>
+    				<p className="text-white">Withdraw as Seller</p>
+  				</div>
+				<div className="w-full sm:w-1/2 text-center mr-10">
+    				<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
+						<img src="/assets/images/receiver.png" alt="New File Image" className="h-12 w-12" />
+    				</button>
+    				<p className="text-white">Withdraw as Receiver</p>
+  				</div>
               
             </div>
           </div>
