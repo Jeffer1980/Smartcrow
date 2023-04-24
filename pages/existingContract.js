@@ -622,11 +622,10 @@ const MyPage = () => {
 	const {Address} = router.query;
 	
 
-    /*useEffect(()=>{
-        const fetchdata = async() => {fetch();}
-        setAmount(1000);
+    useEffect(()=>{
+        handleUpdate();
         
-    })*/
+    })
 
 	const login = async () => {
 		//console.log('trying login function');
@@ -788,7 +787,7 @@ const MyPage = () => {
 		  	<div className="flex justify-between items-center">
             	<h2 className="text-white text-2xl font-bold">APN# {APN}</h2>
 				<button className="bg-white text-blue-700 px-4 py-2 rounded w-32" onClick={handleUpdate}>
-              		Get bonus info
+              		Refresh info
             	</button>
 			</div>
 			<textarea
