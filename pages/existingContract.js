@@ -803,7 +803,7 @@ const MyPage = () => {
                 <div className="w-1/2">
                  
                   <ul className="list-inside text-white">
-                    <li>Amount</li>
+                    <li>Amount (ETH)</li>
                     <li>Start date</li>
                     <li>Sell by</li>
                     <li>Seller Wallet</li>
