@@ -599,6 +599,7 @@ const MyPage = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [popupHeader, setPopupHeader] = useState("");
     const [popupText, setPopupText] = useState("");
+	const [buttonText, setButtonText] = useState("Connect Wallet");
 
 	const router = useRouter();
   	const { SelAPN } = router.query;
@@ -615,6 +616,29 @@ const MyPage = () => {
         
     })*/
 
+	const login = async () => {
+		//console.log('trying login function');
+		
+		
+		try {
+		  const accounts = await window.ethereum.send(
+			"eth_requestAccounts"
+		  )
+		  //console.log('accounts', accounts.result[0]);
+		  const address = accounts.result[0];
+		  provider = new ethers.providers.Web3Provider(window.ethereum);
+		  //var blockNumber = await provider.getBlockNumber();
+		  //console.log('Block number = '+ blockNumber);
+		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
+		  
+		  setButtonText(address);
+		}
+		catch (error) {
+			alert('Please Install Metamask Wallet')
+			return;
+		}
+	}
+
     const handleClosePopup = () => {
         setShowPopup(false);
       };
@@ -623,25 +647,25 @@ const MyPage = () => {
         var result = await withdrawrealtor(APN);
         console.log(result);
         if (result==1){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Last record date before bonus start date');
             setShowPopup(true);
         }
 
 		else if (result==2){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Last record date later than sell by date');
             setShowPopup(true);
         }
 
 		else if (result==3){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Bonus no longer active');
             setShowPopup(true);
         }
 
 		else if (result==4){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopup(true);
         }
@@ -651,25 +675,25 @@ const MyPage = () => {
         var result = await withdrawseller(APN);
         console.log(result);
         if (result==1){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Last record date before bonus start date');
             setShowPopup(true);
         }
 
 		else if (result==2){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Last record date later than sell by date');
             setShowPopup(true);
         }
 
 		else if (result==3){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Bonus no longer active');
             setShowPopup(true);
         }
 
 		else if (result==4){
-            setPopupHeader('Cannot withdraw');
+            setPopupHeader('Unable to withdraw');
             setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopup(true);
         }
@@ -724,23 +748,26 @@ const MyPage = () => {
         <nav className="bg-blue-700 p-4">
           <div className="flex items-center justify-between">
             <h1 className="text-white font-bold text-lg">SmartCrow</h1>
-            <button className="bg-white text-blue-700 px-4 py-2 rounded">
-              Connect Wallet
+            <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>
+              {buttonText}
             </button>
           </div>
         </nav>
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col gap-4">
-            <h2 className="text-white text-2xl font-bold">APN# {APN}</h2>
+		  	<div className="flex justify-between items-center">
+            	<h2 className="text-white text-2xl font-bold">APN# {APN}</h2>
+				<button className="bg-white text-blue-700 px-4 py-2 rounded w-32" onClick={handleUpdate}>
+              		Get bonus info
+            	</button>
+			</div>
 			<textarea
                 id="addresscheck"
                 className="border-gray-300 bg-gray-700 text-white text-center border rounded w-full py-2 px-3 mt-1"
 				defaultValue={Address}
                 rows={2}
               />
-			<button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={handleUpdate}>
-              Get bonus info
-            </button>
+			
             <div className="p-6 rounded">
               <div className="flex">
                 <div className="w-1/2">
@@ -749,8 +776,8 @@ const MyPage = () => {
                     <li>Amount</li>
                     <li>Start date</li>
                     <li>Sell by</li>
-                    <li>Seller</li>
-                    <li>Realtor</li>
+                    <li>Seller Wallet</li>
+                    <li>Receiver Wallet</li>
                     <li>Still active</li>
                   </ul>
                 </div>
@@ -769,13 +796,13 @@ const MyPage = () => {
             </div>
             <div className="p-6 rounded flex justify-between">
 				<div className="w-full sm:w-1/2 text-center mr-10">
-    				<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
+    				<button class="bg-white hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
 						<img src="/assets/images/sender.png" alt="New File Image" className="h-12 w-12" />
     				</button>
     				<p className="text-white">Withdraw as Seller</p>
   				</div>
 				<div className="w-full sm:w-1/2 text-center mr-10">
-    				<button class="bg-white hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
+    				<button class="bg-white hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
 						<img src="/assets/images/receiver.png" alt="New File Image" className="h-12 w-12" />
     				</button>
     				<p className="text-white">Withdraw as Receiver</p>
@@ -785,7 +812,7 @@ const MyPage = () => {
           </div>
         </div>
         {showPopup && (
-                <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup}/>
+                <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup} isOpen={showPopup}/>
                 )}
       </div>
     );
