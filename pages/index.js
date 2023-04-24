@@ -434,7 +434,13 @@ const checkseller = async() => {
 	//document.getElementById("myresponse").value=result;
   console.log(result);
 }
-//test
+
+const formatLongString = (str) => {
+	if (str.length > 6) {
+	  return str.slice(0, 3) + '...' + str.slice(-3);
+	}
+	return str;
+  };
 
 
 
@@ -463,7 +469,7 @@ const HomePage = () => {
 		  //console.log('Block number = '+ blockNumber);
 		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 		  //buttontext = address;
-		  setButtonText(address);
+		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
 			alert('Please Install Metamask Wallet')
@@ -543,6 +549,8 @@ const HomePage = () => {
 			  onClick={copyToClipboard}>
 			  <img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
+			</section>
+			<section className="flex items-center mb-8">
 			<button
 			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-full"
 			  onClick={checkaddress}
@@ -551,7 +559,7 @@ const HomePage = () => {
 			</button>
 		  </section>
 		  <section className="flex items-center mb-6">
-		  	<textarea id="addresscheck" className="resize-none w-96 h-15 px-4 py-4 text-white bg-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"></textarea>
+		  	<textarea id="addresscheck" className="resize-none sm:w-96 h-15 px-4 py-4 text-white bg-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"></textarea>
 		  </section>
 		  <section className="flex justify-center">
 		  	<div className="w-full sm:w-1/2 text-center mr-10">

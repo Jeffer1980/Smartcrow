@@ -592,6 +592,12 @@ const withdrawrealtor = async(APN) =>{
         return 3;}
 }
 
+const formatLongString = (str) => {
+	if (str.length > 6) {
+	  return str.slice(0, 3) + '...' + str.slice(-3);
+	}
+	return str;
+  };
 
 const MyPage = () => {
     const [aseller, setSeller] = useState("");
@@ -637,7 +643,7 @@ const MyPage = () => {
 		  //console.log('Block number = '+ blockNumber);
 		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 		  
-		  setButtonText(address);
+		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
 			alert('Please Install Metamask Wallet')
@@ -811,8 +817,8 @@ const MyPage = () => {
                     <li id="contractamount">{acontractamount}</li>
                     <li>{astartdate}</li>
                     <li>{asellbydate}</li>
-                    <li>{aseller}</li>
-                    <li>{arealtor}</li>
+                    <li>{formatLongString(aseller)}</li>
+                    <li>{formatLongString(arealtor)}</li>
                     <li>{aactiveflag}</li>
                   </ul>
                 </div>

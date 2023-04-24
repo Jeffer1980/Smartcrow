@@ -24,12 +24,12 @@ const PopupSuccess = ({ header, text, closeModal, isOpen}) => {
       ref={modalRef}>
       <div className="w-full max-w-md bg-gray-500 rounded-lg p-4 transform transition-all duration-300 opacity-100 scale-100">
       {/* Header text */}
-      <h2 className="text-xl font-semibold mb-4 flex justify-center">{header}</h2>
+      <h2 className="text-xl font-semibold mb-4 flex justify-center text-white">{header}</h2>
       {/* Horizontal dividing line */}
       <hr className="border-gray-200 my-4" />
       {/* Icon */}
       <div className="flex justify-center text-center mb-4">
-        <img src="/assets/images/success.png" alt="Paste Image" className="h-5 w-5" /> 
+        <img src="/assets/images/success.png" alt="Paste Image" className="h-7 w-7" /> 
       </div>
 
       

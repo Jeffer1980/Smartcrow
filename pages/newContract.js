@@ -442,6 +442,13 @@ const createbonusfunc = async () => {
 				});
 }
 
+const formatLongString = (str) => {
+	if (str.length > 6) {
+	  return str.slice(0, 3) + '...' + str.slice(-3);
+	}
+	return str;
+  };
+
 const MyForm = () => {
     const today = new Date().toISOString().substr(0, 10); // Get today's date in yyyy-mm-dd format
   
@@ -473,7 +480,7 @@ const MyForm = () => {
 		  //console.log('Block number = '+ blockNumber);
 		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 		  
-		  setButtonText(address);
+		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
 			alert('Please Install Metamask Wallet')
