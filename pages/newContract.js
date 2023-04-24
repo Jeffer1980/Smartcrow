@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Popup from '@/components/popup';
+import PopupSuccess from '@/components/popupsuccess';
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -444,7 +446,12 @@ const MyForm = () => {
     const today = new Date().toISOString().substr(0, 10); // Get today's date in yyyy-mm-dd format
   
 	const [buttonText, setButtonText] = useState("Connect Wallet");
-	const [verified, setVerified] = useState(false);
+	const [verificationfailed, setVerified] = useState(true);
+	const [showPopup, setShowPopup] = useState(false);
+	const [showPopupSuccess, setShowPopupSuccess] = useState(false);
+    const [popupHeader, setPopupHeader] = useState("");
+	const [popupHeaderSuccess, setPopupHeaderSuccess] = useState("");
+    const [popupText, setPopupText] = useState("");
 
 	const router = useRouter();
 	const { SelAPN } = router.query;
@@ -473,6 +480,15 @@ const MyForm = () => {
 			return;
 		}
 	}
+
+	const handleClosePopup = () => {
+        setShowPopup(false);
+      };
+
+	  const handleClosePopupSuccess = () => {
+        setShowPopupSuccess(false);
+      };
+
 
 	const copyToClipboardseller = async () => {
 		// Logic to copy value to clipboard
@@ -509,18 +525,21 @@ const MyForm = () => {
 
 		if (verAPN=="" || verAmount==0 || verStartdate=="" || verSellbydate=="" ||verSeller=="" || verRealtor=="") {
 			console.log('Verification failed');
-			setVerified(false);
+			setVerified(true);
+			setPopupHeader('Input verification failed');
+			setPopupText('Please check input data');
+			setShowPopup(true);
 		}
 		else{
 			console.log('Verification ok');
-			setVerified(true);
+			setVerified(false);
 		}
 
 	  }
     return (
       <div className="bg-blue-700 min-h-screen">
         <nav className="flex justify-between items-center bg-blue-700 p-4">
-          <h1 className="text-white font-bold text-lg">SmartCrow</h1>
+		<a href="/" className="text-white font-bold text-2xl hover:text-gray-300">SmartCrow</a>
 		  <h1 className="text-white font-bold text-lg">New Contract</h1>
           <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>{buttonText}</button>
         </nav>
@@ -607,12 +626,20 @@ const MyForm = () => {
 				<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mr-4" onClick={verifydata}>
 		  	        Verify data
 		        </button>
-                <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={createbonusfunc}>
+                <button className={`py-2 px-4 rounded ${
+        verificationfailed ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-700 hover:bg-gr-200'
+      }`} disabled={verificationfailed} onClick={createbonusfunc}>
 		  	        Create Bonus
 		        </button>
             </div>
           </div>
         </div>
+		{showPopup && (
+                <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup} isOpen={showPopup}/>
+                )}
+		{showPopupSuccess && (
+                <PopupSuccess header={popupHeader} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
+                )}
       </div>
     );
   };

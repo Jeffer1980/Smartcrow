@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import Popup from '@/components/popup';
+import PopupSuccess from '@/components/popupsuccess';
 import { IM_Fell_English_SC } from 'next/font/google';
 import { useRouter } from 'next/router';
+
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -521,6 +523,7 @@ const withdrawseller = async(APN) => {
 		else {
 			await MyContractwSigner.sellerwithdraw(APN,resulttimestamp).then(receipt => {
 				console.log(receipt);
+				return 9;
 			}).catch(err => {
 				console.error(err);
 			});;}
@@ -582,6 +585,7 @@ const withdrawrealtor = async(APN) =>{
       else {
 	    await MyContractwSigner.realtorwithdraw(APN,resulttimestamp).then(receipt => {
 			console.log(receipt);
+			return 9;
 		}).catch(err => {
 			console.error(err);
 		});;
@@ -597,7 +601,9 @@ const MyPage = () => {
     const [astartdate, setStartdate] = useState("");
     const [aactiveflag, setActiveFlag] = useState("");
     const [showPopup, setShowPopup] = useState(false);
+	const [showPopupSuccess, setShowPopupSuccess] = useState(false);
     const [popupHeader, setPopupHeader] = useState("");
+	const [popupHeaderSuccess, setPopupHeaderSuccess] = useState("");
     const [popupText, setPopupText] = useState("");
 	const [buttonText, setButtonText] = useState("Connect Wallet");
 
@@ -643,6 +649,10 @@ const MyPage = () => {
         setShowPopup(false);
       };
 
+	  const handleClosePopupSuccess = () => {
+        setShowPopupSuccess(false);
+      };
+
     const handleWithdrawRealtor = async() => {
         var result = await withdrawrealtor(APN);
         console.log(result);
@@ -668,6 +678,12 @@ const MyPage = () => {
             setPopupHeader('Unable to withdraw');
             setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopup(true);
+        }
+
+		else if (result==9){
+            setPopupHeaderSuccess('Withdrawal completed');
+            //setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setShowPopupSuccess(true);
         }
     }
 
@@ -696,6 +712,12 @@ const MyPage = () => {
             setPopupHeader('Unable to withdraw');
             setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopup(true);
+        }
+
+		else if (result==9){
+            setPopupHeaderSuccess('Withdrawal completed');
+            //setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setShowPopupSuccess(true);
         }
     }
 
@@ -747,7 +769,9 @@ const MyPage = () => {
       <div className="bg-blue-700 min-h-screen">
         <nav className="bg-blue-700 p-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-white font-bold text-lg">SmartCrow</h1>
+		  	
+            <a href="/" className="text-white font-bold text-2xl hover:text-gray-300">SmartCrow</a>
+          	
             <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>
               {buttonText}
             </button>
@@ -813,6 +837,9 @@ const MyPage = () => {
         </div>
         {showPopup && (
                 <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup} isOpen={showPopup}/>
+                )}
+		{showPopupSuccess && (
+                <PopupSuccess header={popupHeader} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
                 )}
       </div>
     );
