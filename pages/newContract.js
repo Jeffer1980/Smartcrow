@@ -559,15 +559,17 @@ const MyForm = () => {
               <input
                 type="text"
                 id="parcelid"
-                className="border-gray-300 border rounded py-2 px-3 mt-1 flex-grow"
+                className="border-gray-300 border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
 				defaultValue={SelAPN}
               />
             </div>
             <div className="flex items-center flex-row p-2">
-              
+			<label for="parcelid" className="font-bold mr-4 w-24">
+                
+              </label>
               <textarea
                 id="addresscheck"
-                className="border-gray-300 bg-gray-700 text-white text-center border rounded w-full py-2 px-3 mt-1"
+                className="border-gray-300 bg-gray-700 text-white text-center border rounded flex-grow max-w-screen-sm py-2 px-3 mt-1"
 				defaultValue={Address}
                 rows={2}
               />
@@ -579,7 +581,7 @@ const MyForm = () => {
               <input
                 type="number"
                 id="bonusamount"
-                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
+                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
               />
             </div>
             <div className="flex items-center flex-row p-2">
@@ -589,7 +591,7 @@ const MyForm = () => {
               <input
                 type="date"
                 id="startdate"
-                className="border-gray-300 border rounded py-2 px-3 mt-1 flex-grow"
+                className="border-gray-300 border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
                 defaultValue={today}
               />
             </div>
@@ -600,7 +602,7 @@ const MyForm = () => {
               <input
                 type="date"
                 id="sellbydate"
-                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
+                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
               />
             </div>
             <div className="flex items-center flex-row p-2">
@@ -610,7 +612,7 @@ const MyForm = () => {
               <input
                 type="text"
                 id="senderwallet"
-                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
+                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
               />
 			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardseller}>
 			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
@@ -623,7 +625,7 @@ const MyForm = () => {
               <input
                 type="text"
                 id="receiverwallet"
-                className="border-gray-300 border rounded flex-grow py-2 px-3 mt-1"
+                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
               />
 			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardreceiver}>
 			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
