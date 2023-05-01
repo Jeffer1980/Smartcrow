@@ -18,11 +18,11 @@ const Popup = ({ header, text, closeModal, isOpen}) => {
 
   return (
                
-    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 ${
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-gray-400 bg-opacity-50 ${
       isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       onClick={handleClose}
       ref={modalRef}>
-      <div className="w-full max-w-md bg-gray-500 rounded-lg p-4 transform transition-all duration-300 opacity-100 scale-100">
+      <div className="w-full max-w-md bg-gray-200 rounded-lg p-4 transform transition-all duration-300 opacity-100 scale-100 border-2 border-black">
       {/* Icon */}
       <div className="flex justify-center text-center mb-4">
         <img src="/assets/images/error.png" alt="Paste Image" className="h-7 w-7" /> 
@@ -31,13 +31,13 @@ const Popup = ({ header, text, closeModal, isOpen}) => {
       
 
       {/* Header text */}
-      <h2 className="text-white text-xl font-semibold mb-4 flex justify-center">{header}</h2>
+      <h2 className="text-black text-xl  mb-4 flex justify-center">{header}</h2>
 
       {/* Horizontal dividing line */}
-      <hr className="border-gray-200 my-4 w-16 mx-auto" />
+      <hr className="border-black my-4 w-16 mx-auto" />
 
       {/* Normal text */}
-      <p className="text-gray-200 flex justify-center">{text}</p>
+      <p className="text-black flex justify-center">{text}</p>
     </div>
   </div>
       

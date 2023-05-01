@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        // Set default background color to white
+        'default-bg': '#FFFFFF',
+        'default-bt-text' : '#0089cf',
+        // Set default text color to black
+        'default-text': '#0089cf',
+        'default-bt': '#FFFFFF',
+        'default-border' : '#0089cf',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

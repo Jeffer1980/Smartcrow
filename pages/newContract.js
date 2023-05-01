@@ -1,7 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Popup from '@/components/popup';
 import PopupSuccess from '@/components/popupsuccess';
+import PopupInfo from '@/components/popupinfo';
+
+const coinurl = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest'
+const coinparameters = {
+  'symbol':'ETH',
+  'convert':'USD'
+}
+const coinheaders = {
+  'Accepts': 'application/json',
+  'X-CMC_PRO_API_KEY': '6f049ede-e2fe-4365-b582-673618dc9475',
+}
+
+//const axios = require('axios');
+
+//const CoinMarketCap = require('coinmarketcap-api')
+ 
+const apiKey = 'WE99NHIIQC8Z8KDMEGJJ3SPACQ1F8VKD7E'
+var api = require('etherscan-api').init(apiKey);
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
@@ -406,41 +424,7 @@ var provider;
 var MyContract;
 var MyContractwSigner;
 
-const createbonusfunc = async () => {
-	var APN = document.getElementById("parcelid").value;
-	var Amount = document.getElementById("bonusamount").value;
-	var Realtor = document.getElementById("receiverwallet").value;
-	var Sellby = new Date(document.getElementById("sellbydate").value);
 
-	var Selltimestamp = Math.floor(Sellby.getTime()/1000);
-	
-	//console.log('Sellby = '+Selltimestamp);
-	
-	if (typeof window.ethereum !== 'undefined') {
-		console.log('Metamask is installed!');
-		
-	}
-	var myprovider = window.ethereum;
-	
-	const accounts = await window.ethereum.send(
-        "eth_requestAccounts"
-      )
-      
-      const address = accounts.result[0];
-      provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner(address);
-
-      MyContract = new ethers.Contract(NFTcontract, myabi, provider);
-
-      MyContractwSigner = await MyContract.connect(signer);
-	MyContractwSigner.createBonus(APN,Realtor,Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
-					console.log(receipt);
-					
-				}).catch(err => {
-					console.error(err);
-					
-				});
-}
 
 const formatLongString = (str) => {
 	if (str.length > 6) {
@@ -459,11 +443,52 @@ const MyForm = () => {
     const [popupHeader, setPopupHeader] = useState("");
 	const [popupHeaderSuccess, setPopupHeaderSuccess] = useState("");
     const [popupText, setPopupText] = useState("");
+	const [showBalloon,setShowBalloon] = useState(false);
+	const [balloonText,setBalloonText] = useState("");
 
 	const router = useRouter();
 	const { SelAPN } = router.query;
 	const {Address} = router.query;
   	console.log('APN = '+{SelAPN});
+
+	  const createbonusfunc = async () => {
+		var APN = document.getElementById("parcelid").value;
+		var Amount = document.getElementById("bonusamount").value;
+		var Realtor = document.getElementById("receiverwallet").value;
+		var Sellby = new Date(document.getElementById("sellbydate").value);
+	
+		var Selltimestamp = Math.floor(Sellby.getTime()/1000);
+		
+		//console.log('Sellby = '+Selltimestamp);
+		
+		if (typeof window.ethereum !== 'undefined') {
+			console.log('Metamask is installed!');
+			
+		}
+		var myprovider = window.ethereum;
+		
+		const accounts = await window.ethereum.send(
+			"eth_requestAccounts"
+		  )
+		  
+		  const address = accounts.result[0];
+		  provider = new ethers.providers.Web3Provider(window.ethereum);
+		  const signer = provider.getSigner(address);
+	
+		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
+	
+		  MyContractwSigner = await MyContract.connect(signer);
+		await MyContractwSigner.createBonus(APN,Realtor,Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
+						console.log(receipt);
+						setPopupHeaderSuccess('Bonus created');
+						setShowPopupSuccess(true);
+						
+					}).catch(err => {
+						console.error(err);
+						
+					});
+	}
+
 
 	  const login = async () => {
 		//console.log('trying login function');
@@ -488,12 +513,58 @@ const MyForm = () => {
 		}
 	}
 
+	/*const checkprice = async () =>{
+		console.log('check ETH price')
+		//client.getQuotes({symbol: 'USD,ETH'}).then(console.log).catch(console.error)
+		//var response = axios.get(coinurl, {coinparameters})
+		var response = api.
+		var balance = api.account.balance('0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae');
+		balance.then(function(balanceData){
+  		console.log(balanceData);});
+		//console.log(response);
+
+	}*/
+
+	useEffect(()=>{
+        login();
+        //checkprice();
+    })
+
 	const handleClosePopup = () => {
         setShowPopup(false);
       };
 
 	  const handleClosePopupSuccess = () => {
         setShowPopupSuccess(false);
+      };
+
+	  const handleClickBalloon = () => {
+		setBalloonText('The bonus amount is entered in ETH. For a conversion to USD, please visit https://www.coinbase.com/converter/eth/usd');
+		setShowBalloon(true);
+	  }
+
+	  const handleClickBalloon2 = () => {
+		setBalloonText('This is the start date for the bonus contract');
+		setShowBalloon(true);
+	  }
+
+	  const handleClickBalloon3 = () => {
+		setBalloonText('This is the end date for the bonus contract');
+		setShowBalloon(true);
+	  }
+
+	  const handleClickBalloon4 = () => {
+		setBalloonText('This is the sender wallet address');
+		setShowBalloon(true);
+	  }
+
+	  const handleClickBalloon5 = () => {
+		setBalloonText('This is the receiver wallet address');
+		setShowBalloon(true);
+	  }
+
+	  const handleCloseBalloon = () => {
+        setShowBalloon(false);
       };
 
 
@@ -543,28 +614,55 @@ const MyForm = () => {
 		}
 
 	  }
+
+	  //verify input data
+	  const handleChange = async() => {
+		const verAPN= document.getElementById("parcelid").value;
+		const verAmount= document.getElementById("bonusamount").value;
+		const verStartdate= document.getElementById("startdate").value;
+		const verSellbydate= document.getElementById("sellbydate").value;
+		const verSeller= document.getElementById("senderwallet").value;
+		const verRealtor= document.getElementById("receiverwallet").value;
+
+		if (verAPN=="" || verAmount==0 || verStartdate=="" || verSellbydate=="" ||verSeller=="" || verRealtor=="") {
+			console.log('Verification failed');
+			setVerified(true);
+			//setPopupHeader('Input verification failed');
+			//setPopupText('Please check input data');
+			//setShowPopup(true);
+		}
+		else{
+			console.log('Verification ok');
+			setVerified(false);
+		}
+
+	  }
+
     return (
-      <div className="bg-blue-700 min-h-screen">
-        <nav className="flex justify-between items-center bg-blue-700 p-4">
-		<a href="/" className="text-white font-bold text-2xl hover:text-gray-300">SmartCrow</a>
-		  <h1 className="text-white font-bold text-lg">New Contract</h1>
-          <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>{buttonText}</button>
+      <div className="bg-default-bg min-h-screen">
+        <nav className="flex justify-between items-center bg-default-bg p-4">
+		<a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
+			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="h-20 w-30" /> 
+		</a>
+		  <h1 className="text-default-text font-bold text-lg">New Contract</h1>
+          <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>{buttonText}</button>
         </nav>
         <div className="container mx-auto pb-3">
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center flex-row p-2">
-              <label for="parcelid" className="font-bold mr-4 w-24">
+              <label for="parcelid" className="font-bold mr-4 w-24 text-default-text">
                 APN
               </label>
               <input
                 type="text"
                 id="parcelid"
-                className="border-gray-300 border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
+                className="border-default-border border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
 				defaultValue={SelAPN}
+				onChange={handleChange}
               />
             </div>
             <div className="flex items-center flex-row p-2">
-			<label for="parcelid" className="font-bold mr-4 w-24">
+			<label for="parcelid" className="font-bold mr-4 w-24 text-default-text">
                 
               </label>
               <textarea
@@ -575,79 +673,101 @@ const MyForm = () => {
               />
             </div>
             <div className="flex items-center flex-row p-2">
-              <label for="bonusamount" className="font-bold mr-4 w-24">
+              <label for="bonusamount" className="font-bold mr-4 w-24 text-default-text">
                 Amount (ETH)
               </label>
               <input
                 type="number"
                 id="bonusamount"
-                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+                className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+				onChange={handleChange}
               />
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
             </div>
             <div className="flex items-center flex-row p-2">
-              <label for="startdate" className="font-bold mr-4 w-24">
+              <label for="startdate" className="font-bold mr-4 w-24 text-default-text">
                 Start Date
               </label>
               <input
                 type="date"
                 id="startdate"
-                className="border-gray-300 border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
+                className="border-default-border border rounded py-2 px-3 mt-1 max-w-screen-sm flex-grow"
                 defaultValue={today}
+				onChange={handleChange}
               />
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon2}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
             </div>
             <div className="flex items-center flex-row p-2">
-              <label for="sellbydate" className="font-bold mr-4 w-24">
+              <label for="sellbydate" className="font-bold mr-4 w-24 text-default-text">
                 Sell By
               </label>
               <input
                 type="date"
                 id="sellbydate"
-                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+                className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+				onChange={handleChange}
               />
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon3}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
             </div>
             <div className="flex items-center flex-row p-2">
-              <label for="senderwallet" className="font-bold mr-4 w-24">
+              <label for="senderwallet" className="font-bold mr-4 w-24 text-default-text">
                 Sender Wallet
               </label>
               <input
                 type="text"
                 id="senderwallet"
-                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+                className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardseller}>
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full ml-2 mr-1 border-default-border border" onClick={copyToClipboardseller}>
 			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
+			<button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon4}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
             </div>
             <div className="flex items-center flex-row p-2">
-              <label htmlFor="receiverwallet" className="font-bold mr-4 w-24">
-                Realtor Wallet
+              <label htmlFor="receiverwallet" className="font-bold mr-4 w-24 text-default-text">
+                Receiver Wallet
               </label>
               <input
                 type="text"
                 id="receiverwallet"
-                className="border-gray-300 border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+                className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
+				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={copyToClipboardreceiver}>
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full ml-2 mr-1 border-default-border border" onClick={copyToClipboardreceiver}>
 			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
+			<button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon5}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
             </div>
             <div className="p-6 flex items-center justify-center">
-				<button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded mr-4" onClick={verifydata}>
-		  	        Verify data
-		        </button>
+				
                 <button className={`py-2 px-4 rounded ${
-        verificationfailed ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-700 hover:bg-gr-200'
+        verificationfailed ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-default-bt text-default-bt-text hover:bg-gr-200 border border-default-border'
       }`} disabled={verificationfailed} onClick={createbonusfunc}>
 		  	        Create Bonus
 		        </button>
             </div>
           </div>
         </div>
+		
 		{showPopup && (
                 <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup} isOpen={showPopup}/>
                 )}
 		{showPopupSuccess && (
-                <PopupSuccess header={popupHeader} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
+                <PopupSuccess header={popupHeaderSuccess} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
+                )}
+		{showBalloon && (
+                <PopupInfo text={balloonText} closeModal={handleCloseBalloon} isOpen={showBalloon}/>
                 )}
       </div>
     );

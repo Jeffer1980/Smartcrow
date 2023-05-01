@@ -624,6 +624,7 @@ const MyPage = () => {
 
     useEffect(()=>{
         handleUpdate();
+		login();
         
     })
 
@@ -697,19 +698,19 @@ const MyPage = () => {
         console.log(result);
         if (result==1){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Last record date before bonus start date');
+            setPopupText('Last recorded date is before bonus start date');
             setShowPopup(true);
         }
 
 		else if (result==2){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Last record date later than sell by date');
+            setPopupText('Last recorded date is later than sell by date');
             setShowPopup(true);
         }
 
 		else if (result==3){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Bonus no longer active');
+            setPopupText('Bonus is no longer active');
             setShowPopup(true);
         }
 
@@ -771,13 +772,15 @@ const MyPage = () => {
 
    //fetch();
     return (
-      <div className="bg-blue-700 min-h-screen">
-        <nav className="bg-blue-700 p-4">
+      <div className="bg-default-bg min-h-screen">
+        <nav className="bg-default-bg p-4">
           <div className="flex items-center justify-between">
 		  	
-            <a href="/" className="text-white font-bold text-2xl hover:text-gray-300">SmartCrow</a>
+            <a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
+				<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="h-20 w-30" />
+			</a>
           	
-            <button className="bg-white text-blue-700 px-4 py-2 rounded" onClick={login}>
+            <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>
               {buttonText}
             </button>
           </div>
@@ -785,8 +788,8 @@ const MyPage = () => {
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col gap-4">
 		  	<div className="flex justify-between items-center">
-            	<h2 className="text-white text-2xl font-bold">APN# {APN}</h2>
-				<button className="bg-white text-blue-700 px-4 py-2 rounded w-32" onClick={handleUpdate}>
+            	<h2 className="text-default-text text-2xl font-bold">APN# {APN}</h2>
+				<button className="bg-default-bt text-default-bt-text px-4 py-2 rounded w-32 border border-default-border" onClick={handleUpdate}>
               		Refresh info
             	</button>
 			</div>
@@ -797,11 +800,11 @@ const MyPage = () => {
                 rows={2}
               />
 			
-            <div className="p-6 rounded">
-              <div className="flex">
+            <div className="p-6 rounded border border-default-border">
+              <div className="flex  rounded px-2 py-2">
                 <div className="w-1/2">
                  
-                  <ul className="list-inside text-white">
+                  <ul className="list-inside text-default-text">
                     <li>Amount (ETH)</li>
                     <li>Start date</li>
                     <li>Sell by</li>
@@ -810,7 +813,7 @@ const MyPage = () => {
                     <li>Still active</li>
                   </ul>
                 </div>
-                <div className="w-1/2 text-right text-white">
+                <div className="w-1/2 text-right text-default-text">
                   
                   <ul className="list-inside">
                     <li id="contractamount">{acontractamount}</li>
@@ -825,16 +828,16 @@ const MyPage = () => {
             </div>
             <div className="p-6 rounded flex justify-between">
 				<div className="w-full sm:w-1/2 text-center mr-10">
-    				<button class="bg-white hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
+    				<button class="bg-white border border-default-border hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
 						<img src="/assets/images/sender.png" alt="New File Image" className="h-12 w-12" />
     				</button>
-    				<p className="text-white">Withdraw as Seller</p>
+    				<p className="text-default-text">Withdraw as Seller</p>
   				</div>
 				<div className="w-full sm:w-1/2 text-center mr-10">
-    				<button class="bg-white hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
+    				<button class="bg-white border border-default-border hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
 						<img src="/assets/images/receiver.png" alt="New File Image" className="h-12 w-12" />
     				</button>
-    				<p className="text-white">Withdraw as Receiver</p>
+    				<p className="text-default-text">Withdraw as Receiver</p>
   				</div>
               
             </div>
@@ -844,7 +847,7 @@ const MyPage = () => {
                 <Popup header={popupHeader} text={popupText} closeModal={handleClosePopup} isOpen={showPopup}/>
                 )}
 		{showPopupSuccess && (
-                <PopupSuccess header={popupHeader} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
+                <PopupSuccess header={popupHeaderSuccess} text={""} closeModal={handleClosePopupSuccess} isOpen={showPopupSuccess}/>
                 )}
       </div>
     );

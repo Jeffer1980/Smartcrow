@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 //import ethers from ethers
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import PopupInfo from '@/components/popupinfo';
 
 
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
@@ -451,6 +452,8 @@ const HomePage = () => {
   	const [buttonText, setButtonText] = useState("Connect Wallet");
 	const [APNaddress, setAPNAddress] = useState("Address to be checked");
 	const [APNaddresscheck, setAPNAddresscheck] = useState("");
+	const [showBalloon,setShowBalloon] = useState(false);
+	const [balloonText,setBalloonText] = useState("");
 
 	const router = useRouter();
 
@@ -477,6 +480,11 @@ const HomePage = () => {
 		}
 	}
 	
+	const handleClickBalloon = () => {
+		setBalloonText('Check the address of the given APN');
+		setShowBalloon(true);
+	  }
+
 	const checkaddress = async()=>{
 		var myAPN = document.getElementById("myAPNInput").value; 
 		setAPN(myAPN);
@@ -515,6 +523,10 @@ const HomePage = () => {
 		else {router.push(`/existingContract?SelAPN=${data}&Address=${data2}`);}
 	};
 
+	const handleCloseBalloon = () => {
+        setShowBalloon(false);
+      };
+
 	const handleNewContract = () => {
 		const data = document.getElementById("myAPNInput").value;
 		const data2 = document.getElementById("addresscheck").value;
@@ -525,57 +537,65 @@ const HomePage = () => {
 	};
   
 	return (
-	  <div className="bg-blue-700 min-h-screen">
+	  <div className="bg-default-bg min-h-screen">
 		<header className="flex items-center justify-between px-8 py-4">
-		  <h1 className="text-white text-xl font-bold">SmartCrow</h1>
-		  <button className="bg-white text-blue-500 font-semibold px-4 py-2 rounded" onClick={login}>
+			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="h-20 w-30" /> 
+		  <button className="bg-default-bt text-default-bt-text font-semibold px-4 py-2 rounded border border-default-border" onClick={login}>
 		  	{buttonText}
 		  </button>
 		</header>
 		<main className="flex flex-col items-center justify-center py-16">
-		  <section className="text-white text-center mb-8">
+		  <section className="text-default-text text-center mb-8">
 			
-			<h1 className="text-white text-xl font-bold">Please enter your APN</h1>
+			<h1 className="text-default-text text-xl font-bold">Please enter your APN</h1>
 		  </section>
 		  <section className="flex items-center mb-8">
 			<input
 			  type="text"
 			  id="myAPNInput"
-			  className="w-60 bg-white rounded px-4 py-2 focus:outline-none m-2"
+			  className="w-60 bg-default-bg rounded px-4 py-2 focus:outline-none m-2 border border-default-border"
 			  placeholder="Paste APN here..."
 			/>
 			<button
-			  className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2"
+			  className="bg-default-bg text-blue-500 font-semibold px-2 py-2 rounded-full m-2 border border-default-border"
 			  onClick={copyToClipboard}>
 			  <img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
 			</section>
 			<section className="flex items-center mb-8">
 			<button
-			  className="bg-white text-blue-500 font-semibold px-4 py-2 rounded-full"
+			  className="bg-default-bt text-default-bt-text font-semibold px-4 py-2 rounded-full border border-default-border"
 			  onClick={checkaddress}
 			>
 			  Check Address
 			</button>
+			<button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon}>
+			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
+			</button>
+			
 		  </section>
 		  <section className="flex items-center mb-6">
 		  	<textarea id="addresscheck" className="resize-none sm:w-96 h-15 px-4 py-4 text-white bg-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"></textarea>
 		  </section>
 		  <section className="flex justify-center">
 		  	<div className="w-full sm:w-1/2 text-center mr-10">
-    			<button class="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleNewContract}>
+    			<button class="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4 border border-default-border" onClick={handleNewContract}>
 					<img src="/assets/images/newfile.png" alt="New File Image" className="h-12 w-12" />
     			</button>
-    			<p className="text-white">New Contract</p>
+    			<p className="text-default-text">New Contract</p>
+				
   			</div>
   			<div className="w-full sm:w-1/2 text-center">
-    			<button className="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleExistingContract}>
+    			<button className="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4 border border-default-border" onClick={handleExistingContract}>
 					<img src="/assets/images/existingfile.png" alt="Existing File Image" className="h-12 w-12" />
     			</button>
-    			<p className="text-white">Existing Contract</p>
+    			<p className="text-default-text">Existing Contract</p>
   			</div>
 		  </section>
 		</main>
+		{showBalloon && (
+                <PopupInfo text={balloonText} closeModal={handleCloseBalloon} isOpen={showBalloon}/>
+                )}
 	  </div>
 	);
   };
