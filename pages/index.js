@@ -539,7 +539,7 @@ const HomePage = () => {
 	return (
 	  <div className="bg-default-bg min-h-screen">
 		<header className="flex items-center justify-between px-8 py-4">
-			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="h-20 w-30" /> 
+			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="sm:h-10 sm:w-15 h-20 w-30 " /> 
 		  <button className="bg-default-bt text-default-bt-text font-semibold px-4 py-2 rounded border border-default-border" onClick={login}>
 		  	{buttonText}
 		  </button>

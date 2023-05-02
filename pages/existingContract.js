@@ -777,7 +777,7 @@ const MyPage = () => {
           <div className="flex items-center justify-between">
 		  	
             <a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
-				<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="h-20 w-30" />
+				<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="sm:h-10 sm:w-15 h-20 w-30 " />
 			</a>
           	
             <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>
