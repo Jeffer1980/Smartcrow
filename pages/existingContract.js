@@ -526,7 +526,9 @@ const withdrawseller = async(APN) => {
 				return 9;
 			}).catch(err => {
 				console.error(err);
-			});;}
+			});;
+			return 9;
+		}
 }
 
 const withdrawrealtor = async(APN) =>{
@@ -589,7 +591,8 @@ const withdrawrealtor = async(APN) =>{
 		}).catch(err => {
 			console.error(err);
 		});;
-        return 3;}
+		return 9;
+    }
 }
 
 const formatLongString = (str) => {
@@ -777,7 +780,7 @@ const MyPage = () => {
           <div className="flex items-center justify-between">
 		  	
             <a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
-				<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="sm:h-10 sm:w-15 h-20 w-30 " />
+				<img src="/assets/images/logo5.png" alt="Smartcrow logo" className="max-w-xs h-auto " />
 			</a>
           	
             <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>

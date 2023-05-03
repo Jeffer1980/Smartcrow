@@ -458,6 +458,8 @@ const MyForm = () => {
 		var Sellby = new Date(document.getElementById("sellbydate").value);
 	
 		var Selltimestamp = Math.floor(Sellby.getTime()/1000);
+		var Startby = new Date(document.getElementById("startdate").value);
+		var Startdatetimestamp = Math.floor(Startby.getTime()/1000);
 		
 		//console.log('Sellby = '+Selltimestamp);
 		
@@ -478,7 +480,7 @@ const MyForm = () => {
 		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 	
 		  MyContractwSigner = await MyContract.connect(signer);
-		await MyContractwSigner.createBonus(APN,Realtor,Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
+		await MyContractwSigner.createBonusTest(APN,Realtor,Startdatetimestamp, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 						console.log(receipt);
 						setPopupHeaderSuccess('Bonus created');
 						setShowPopupSuccess(true);
@@ -539,27 +541,27 @@ const MyForm = () => {
       };
 
 	  const handleClickBalloon = () => {
-		setBalloonText('The bonus amount is entered in ETH. For a conversion to USD, please visit https://www.coinbase.com/converter/eth/usd');
+		setBalloonText('The amount entered is in ETH. For a conversion to USD, please visit https://www.coinbase.com/converter/eth/usd Conversion can be up to five decimal points e.g. 0.00001');
 		setShowBalloon(true);
 	  }
 
 	  const handleClickBalloon2 = () => {
-		setBalloonText('This is the start date for the bonus contract');
+		setBalloonText('This is the start date of the contract.');
 		setShowBalloon(true);
 	  }
 
 	  const handleClickBalloon3 = () => {
-		setBalloonText('This is the end date for the bonus contract');
+		setBalloonText('This is the end date of the contract. The real property grant deed must be recorded by this date.');
 		setShowBalloon(true);
 	  }
 
 	  const handleClickBalloon4 = () => {
-		setBalloonText('This is the sender wallet address');
+		setBalloonText('This is the sender wallet address. This wallet address will fund the contract via MetaMask.');
 		setShowBalloon(true);
 	  }
 
 	  const handleClickBalloon5 = () => {
-		setBalloonText('This is the receiver wallet address');
+		setBalloonText('This is the receiver wallet address. If contract terms are met, funds will be sent to the receiver wallet address.');
 		setShowBalloon(true);
 	  }
 
@@ -642,9 +644,9 @@ const MyForm = () => {
       <div className="bg-default-bg min-h-screen">
         <nav className="flex justify-between items-center bg-default-bg p-4">
 		<a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
-			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="sm:h-10 sm:w-15 h-20 w-30 " /> 
+			<img src="/assets/images/logo5.png" alt="Smartcrow logo" className="max-w-xs h-auto " /> 
 		</a>
-		  <h1 className="text-default-text font-bold text-lg">New Contract</h1>
+		  <h1 className="text-default-text font-bold text-lg sm:text-m">New Contract</h1>
           <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>{buttonText}</button>
         </nav>
         <div className="container mx-auto pb-3">
@@ -677,12 +679,13 @@ const MyForm = () => {
                 Amount (ETH)
               </label>
               <input
-                type="number"
+                type="text"
+				inputMode='numeric'
                 id="bonusamount"
                 className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
 				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon}>
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon}>
 			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
             </div>
@@ -697,7 +700,7 @@ const MyForm = () => {
                 defaultValue={today}
 				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon2}>
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon2}>
 			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
             </div>
@@ -711,7 +714,7 @@ const MyForm = () => {
                 className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
 				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full m-2" onClick={handleClickBalloon3}>
+			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon3}>
 			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
             </div>
@@ -725,9 +728,7 @@ const MyForm = () => {
                 className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
 				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full ml-2 mr-1 border-default-border border" onClick={copyToClipboardseller}>
-			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
-			</button>
+			  
 			<button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon4}>
 			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>
@@ -742,9 +743,7 @@ const MyForm = () => {
                 className="border-default-border border rounded max-w-screen-sm flex-grow py-2 px-3 mt-1"
 				onChange={handleChange}
               />
-			  <button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full ml-2 mr-1 border-default-border border" onClick={copyToClipboardreceiver}>
-			  	<img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
-			</button>
+			  
 			<button className="bg-white text-blue-500 font-semibold px-2 py-2 rounded-full mr-2" onClick={handleClickBalloon5}>
 			  	<img src="/assets/images/info.png" alt="Paste Image" className="h-5 w-5" /> 
 			</button>

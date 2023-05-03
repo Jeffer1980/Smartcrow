@@ -409,6 +409,35 @@ var provider;
 var MyContract;
 var MyContractwSigner;
 
+const fetch = async(APN) => {
+	
+		    
+    if (typeof window.ethereum !== 'undefined') {
+        console.log('Metamask is installed!');
+        
+    }
+    var myprovider = window.ethereum;
+    
+    const accounts = await window.ethereum.send(
+        "eth_requestAccounts"
+      )
+      
+      const address = accounts.result[0];
+      provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner(address);
+
+      MyContract = new ethers.Contract(NFTcontract, myabi, provider);
+
+      MyContractwSigner = await MyContract.connect(signer);
+
+    
+    var activeflag = await MyContract.getBonusActive(APN);
+    console.log('Active flag = '+activeflag);
+    
+
+    return activeflag;
+}
+
 const checkseller = async() => {
 	
 	var APN = '290-15-153';
@@ -454,6 +483,8 @@ const HomePage = () => {
 	const [APNaddresscheck, setAPNAddresscheck] = useState("");
 	const [showBalloon,setShowBalloon] = useState(false);
 	const [balloonText,setBalloonText] = useState("");
+	const [buttonNewContract,setbuttonNewContract] = useState(true);
+	const [buttonExistingContract,setbuttonExistingContract] = useState(true);
 
 	const router = useRouter();
 
@@ -481,7 +512,7 @@ const HomePage = () => {
 	}
 	
 	const handleClickBalloon = () => {
-		setBalloonText('Check the address of the given APN');
+		setBalloonText('Check the address of the given APN. If there is no active contract on the given APN, you can create a new contract. If there is an active contract, you can check the details of the existing contract.');
 		setShowBalloon(true);
 	  }
 
@@ -499,6 +530,18 @@ const HomePage = () => {
 		console.log(APNaddress);
 		const myText = document.getElementById("addresscheck");
 		myText.value = resultdate2;
+
+		var buttonresult = await fetch(myAPN);
+		console.log("buttonresult = "+buttonresult)
+		if (buttonresult) {
+			setbuttonExistingContract(false);
+			setbuttonNewContract(true);
+		}
+
+		else {
+			setbuttonNewContract(false);
+			setbuttonExistingContract(true);
+		}
 		
 	} 
 
@@ -539,7 +582,7 @@ const HomePage = () => {
 	return (
 	  <div className="bg-default-bg min-h-screen">
 		<header className="flex items-center justify-between px-8 py-4">
-			<img src="/assets/images/logo4.png" alt="Smartcrow logo" className="sm:h-10 sm:w-15 h-20 w-30 " /> 
+			<img src="/assets/images/logo5.png" alt="Smartcrow logo" className="max-w-xs h-auto  " /> 
 		  <button className="bg-default-bt text-default-bt-text font-semibold px-4 py-2 rounded border border-default-border" onClick={login}>
 		  	{buttonText}
 		  </button>
@@ -556,11 +599,7 @@ const HomePage = () => {
 			  className="w-60 bg-default-bg rounded px-4 py-2 focus:outline-none m-2 border border-default-border"
 			  placeholder="Paste APN here..."
 			/>
-			<button
-			  className="bg-default-bg text-blue-500 font-semibold px-2 py-2 rounded-full m-2 border border-default-border"
-			  onClick={copyToClipboard}>
-			  <img src="/assets/images/paste.png" alt="Paste Image" className="h-5 w-5" /> 
-			</button>
+			
 			</section>
 			<section className="flex items-center mb-8">
 			<button
@@ -579,14 +618,14 @@ const HomePage = () => {
 		  </section>
 		  <section className="flex justify-center">
 		  	<div className="w-full sm:w-1/2 text-center mr-10">
-    			<button class="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4 border border-default-border" onClick={handleNewContract}>
+    			<button class={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonNewContract? 'bg-gray-300 cursor-not-allowed' : 'bg-white'}`} onClick={handleNewContract} disabled={buttonNewContract}>
 					<img src="/assets/images/newfile.png" alt="New File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-default-text">New Contract</p>
 				
   			</div>
   			<div className="w-full sm:w-1/2 text-center">
-    			<button className="bg-white hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4 border border-default-border" onClick={handleExistingContract}>
+    			<button className={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonExistingContract? 'bg-gray-300 cursos-not-allowed' : 'bg-default-bg'}`} onClick={handleExistingContract} disabled={buttonExistingContract}>
 					<img src="/assets/images/existingfile.png" alt="Existing File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-default-text">Existing Contract</p>
