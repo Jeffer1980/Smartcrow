@@ -625,7 +625,7 @@ const HomePage = () => {
 				
   			</div>
   			<div className="w-full sm:w-1/2 text-center">
-    			<button className={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonExistingContract? 'bg-gray-300 cursos-not-allowed' : 'bg-default-bg'}`} onClick={handleExistingContract} disabled={buttonExistingContract}>
+    			<button className={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonExistingContract? 'bg-gray-300 cursor-not-allowed' : 'bg-default-bg'}`} onClick={handleExistingContract} disabled={buttonExistingContract}>
 					<img src="/assets/images/existingfile.png" alt="Existing File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-default-text">Existing Contract</p>

@@ -646,7 +646,7 @@ const MyForm = () => {
 		<a href="/" className="text-white font-bold text-2xl hover:text-gray-300">
 			<img src="/assets/images/logo5.png" alt="Smartcrow logo" className="max-w-xs h-auto " /> 
 		</a>
-		  <h1 className="text-default-text font-bold text-lg sm:text-m">New Contract</h1>
+		  <p className="text-default-text font-bold text-sm md:text-lg">New Contract</p>
           <button className="bg-default-bt text-default-bt-text px-4 py-2 rounded border border-default-border" onClick={login}>{buttonText}</button>
         </nav>
         <div className="container mx-auto pb-3">
