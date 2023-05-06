@@ -425,7 +425,7 @@ var MyContract;
 var MyContractwSigner;
 
 
-
+//test
 const formatLongString = (str) => {
 	if (str.length > 6) {
 	  return str.slice(0, 3) + '...' + str.slice(-3);
@@ -461,7 +461,7 @@ const MyForm = () => {
 		var Startby = new Date(document.getElementById("startdate").value);
 		var Startdatetimestamp = Math.floor(Startby.getTime()/1000);
 		
-		//console.log('Sellby = '+Selltimestamp);
+		//console.log('Startdate = '+Startdatetimestamp);
 		
 		if (typeof window.ethereum !== 'undefined') {
 			console.log('Metamask is installed!');
@@ -480,7 +480,10 @@ const MyForm = () => {
 		  MyContract = new ethers.Contract(NFTcontract, myabi, provider);
 	
 		  MyContractwSigner = await MyContract.connect(signer);
+		  //console.log('APN = '+APN);
+		  //console.log('Amount = '+Amount);
 		await MyContractwSigner.createBonusTest(APN,Realtor,Startdatetimestamp, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
+		//await MyContractwSigner.createBonus(APN,Realtor, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 						console.log(receipt);
 						setPopupHeaderSuccess('Bonus created');
 						setShowPopupSuccess(true);
