@@ -649,7 +649,7 @@ const MyPage = () => {
 		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
-			alert('Please Install Metamask Wallet')
+			console.log('Please Install Metamask Wallet');
 			return;
 		}
 	}

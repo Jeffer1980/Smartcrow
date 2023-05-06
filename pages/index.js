@@ -506,7 +506,7 @@ const HomePage = () => {
 		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
-			alert('Please Install Metamask Wallet')
+			console.log('Metamask not working');
 			return;
 		}
 	}
@@ -618,7 +618,7 @@ const HomePage = () => {
 		  </section>
 		  <section className="flex justify-center">
 		  	<div className="w-full sm:w-1/2 text-center mr-10">
-    			<button class={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonNewContract? 'bg-gray-300 cursor-not-allowed' : 'bg-white'}`} onClick={handleNewContract} disabled={buttonNewContract}>
+    			<button className={` hover:bg-gray-200 text-white font-semibold py-3 px-6 rounded-lg mb-4  border border-default-border ${buttonNewContract? 'bg-gray-300 cursor-not-allowed' : 'bg-white'}`} onClick={handleNewContract} disabled={buttonNewContract}>
 					<img src="/assets/images/newfile.png" alt="New File Image" className="h-12 w-12" />
     			</button>
     			<p className="text-default-text">New Contract</p>
