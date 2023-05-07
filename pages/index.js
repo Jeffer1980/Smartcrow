@@ -7,9 +7,9 @@ import PopupInfo from '@/components/popupinfo';
 import PopupSuccess from '@/components/popupsuccess';
 
 //Mumbai
-const NFTcontract="0x009bB4938f9C8a3290e5FC166D6eF8d1616Ad5e8";
+//const NFTcontract="0x009bB4938f9C8a3290e5FC166D6eF8d1616Ad5e8";
 //Goerli
-//const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
+const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
 const zillowurladdress='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&parcels.apn=';
 const myabi=[
