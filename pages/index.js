@@ -4,9 +4,12 @@ import { Inter } from 'next/font/google'
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import PopupInfo from '@/components/popupinfo';
+import PopupSuccess from '@/components/popupsuccess';
 
-
-const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
+//Mumbai
+const NFTcontract="0x009bB4938f9C8a3290e5FC166D6eF8d1616Ad5e8";
+//Goerli
+//const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
 const zillowurladdress='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&parcels.apn=';
 const myabi=[
@@ -472,7 +475,15 @@ const formatLongString = (str) => {
 	return str;
   };
 
-
+  const removeLeadingTrailingBlanksAndDashes = async (str) => {
+	// Remove leading and trailing blanks and dashes
+	const trimmedStr = str.replace(/(^\s+)|(\s+$)/g, '').replace(/(^-+)|(-+$)/g, '');
+	
+	// Remove dashes within the string
+	const finalStr = trimmedStr.replace(/-/g, '');
+	
+	return finalStr;
+  };
 
 const HomePage = () => {
 	
@@ -498,6 +509,7 @@ const HomePage = () => {
 		  )
 		  //console.log('accounts', accounts.result[0]);
 		  const address = accounts.result[0];
+		  //console.log('address = '+address);
 		  provider = new ethers.providers.Web3Provider(window.ethereum);
 		  //var blockNumber = await provider.getBlockNumber();
 		  //console.log('Block number = '+ blockNumber);
@@ -517,7 +529,9 @@ const HomePage = () => {
 	  }
 
 	const checkaddress = async()=>{
-		var myAPN = document.getElementById("myAPNInput").value; 
+		var myAPN = document.getElementById("myAPNInput").value;
+		myAPN = await removeLeadingTrailingBlanksAndDashes(myAPN);
+		console.log('myAPN = '+myAPN);
 		setAPN(myAPN);
 		var finalurl=zillowurladdress+myAPN;
 		console.log(finalurl);
@@ -557,8 +571,9 @@ const HomePage = () => {
 	  
 	};
 
-	const handleExistingContract = () => {
-		const data = document.getElementById("myAPNInput").value;
+	const handleExistingContract = async() => {
+		var data = document.getElementById("myAPNInput").value;
+		data = await removeLeadingTrailingBlanksAndDashes(data);
 		const data2 = document.getElementById("addresscheck").value;
 		if (data=='Paste clipboard value here...'){
 			return 1;
@@ -570,8 +585,9 @@ const HomePage = () => {
         setShowBalloon(false);
       };
 
-	const handleNewContract = () => {
-		const data = document.getElementById("myAPNInput").value;
+	const handleNewContract = async() => {
+		var data = document.getElementById("myAPNInput").value;
+		data = await removeLeadingTrailingBlanksAndDashes(data);
 		const data2 = document.getElementById("addresscheck").value;
 		if (data=='Paste clipboard value here...'){
 			return 1;

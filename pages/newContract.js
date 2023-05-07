@@ -20,7 +20,9 @@ const coinheaders = {
  
 const apiKey = 'WE99NHIIQC8Z8KDMEGJJ3SPACQ1F8VKD7E'
 var api = require('etherscan-api').init(apiKey);
-
+//Mumbai
+//const NFTcontract="0x009bB4938f9C8a3290e5FC166D6eF8d1616Ad5e8";
+//Goerli
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
 const zillowurladdress='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&parcels.apn=';
@@ -485,8 +487,9 @@ const MyForm = () => {
 		await MyContractwSigner.createBonusTest(APN,Realtor,Startdatetimestamp, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 		//await MyContractwSigner.createBonus(APN,Realtor, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 						console.log(receipt);
-						setPopupHeaderSuccess('Bonus created');
+						setPopupHeaderSuccess('Contract Created');
 						setShowPopupSuccess(true);
+						
 						
 					}).catch(err => {
 						console.error(err);
@@ -513,7 +516,7 @@ const MyForm = () => {
 		  setButtonText(formatLongString(address));
 		}
 		catch (error) {
-			alert('Please Install Metamask Wallet')
+			console.log('Please Install Metamask Wallet');
 			return;
 		}
 	}
@@ -541,6 +544,7 @@ const MyForm = () => {
 
 	  const handleClosePopupSuccess = () => {
         setShowPopupSuccess(false);
+		router.push('/');
       };
 
 	  const handleClickBalloon = () => {
@@ -756,7 +760,7 @@ const MyForm = () => {
                 <button className={`py-2 px-4 rounded ${
         verificationfailed ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-default-bt text-default-bt-text hover:bg-gr-200 border border-default-border'
       }`} disabled={verificationfailed} onClick={createbonusfunc}>
-		  	        Create Bonus
+		  	        Create Contract
 		        </button>
             </div>
           </div>

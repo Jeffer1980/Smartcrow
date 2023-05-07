@@ -4,7 +4,9 @@ import PopupSuccess from '@/components/popupsuccess';
 import { IM_Fell_English_SC } from 'next/font/google';
 import { useRouter } from 'next/router';
 
-
+//Mumbai
+//const NFTcontract="0x009bB4938f9C8a3290e5FC166D6eF8d1616Ad5e8";
+//Goerli
 const NFTcontract="0x006c4237E2233fc5b3793aD9E200076C9Cf99a0E";
 const zillowurl='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&documentType=grant&recordingDate.gt=2015-01-01&parcels.apn=';
 const zillowurladdress='https://api.bridgedataoutput.com/api/v2/pub/transactions?access_token=d555ec24e3f182c86561b09d0a85c3dc&limit=1&sortBy=recordingDate&order=desc&fields=recordingDate,parcels.apn,parcels.full&parcels.apn=';
@@ -504,6 +506,7 @@ const withdrawseller = async(APN) => {
 
       MyContractwSigner = await MyContract.connect(signer);
 	  var myactive = await MyContract.getBonusActive(APN);
+	  var mystartdate = await MyContract.getBonusstartdate(APN);
 	  var mysellbydate = await MyContract.getBonussellbydate(APN);
 	  //var myslackdate = mysellbydate + (30*24*3600);
 	  var myslackdate = parseInt(mysellbydate, 10) + (30*24*3600);
@@ -520,14 +523,21 @@ const withdrawseller = async(APN) => {
         
         	return 3;
 		}
+		else if (resulttimestamp<mysellbydate && resulttimestamp>mystartdate){
+			console.log('Property sold on time');
+			return 5;
+		}
 		else {
-			await MyContractwSigner.sellerwithdraw(APN,resulttimestamp).then(receipt => {
-				console.log(receipt);
-				return 9;
-			}).catch(err => {
-				console.error(err);
-			});;
+			try{
+			var receipt = await MyContractwSigner.sellerwithdraw(APN,resulttimestamp)
+			console.log(receipt);
 			return 9;
+			}
+			
+			catch{
+				console.log('Action cancelled');
+			}
+			//return 9;
 		}
 }
 
@@ -585,13 +595,15 @@ const withdrawrealtor = async(APN) =>{
 	  }
 
       else {
-	    await MyContractwSigner.realtorwithdraw(APN,resulttimestamp).then(receipt => {
-			console.log(receipt);
-			return 9;
-		}).catch(err => {
-			console.error(err);
-		});;
-		return 9;
+		try{
+	    var receipt = await MyContractwSigner.realtorwithdraw(APN,resulttimestamp);
+		console.log(receipt);
+		return 9;}
+		catch{
+			console.log('Action cancelled');
+		}
+		
+		//return 9;
     }
 }
 
@@ -667,7 +679,7 @@ const MyPage = () => {
         console.log(result);
         if (result==1){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Last record date before bonus start date');
+            setPopupText('Last public record date is before contract start date');
             setShowPopup(true);
         }
 
@@ -685,9 +697,11 @@ const MyPage = () => {
 
 		else if (result==4){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setPopupText('Earliest withdraw date is 30 days after sell by date and if contract terms not met');
             setShowPopup(true);
         }
+
+		
 
 		else if (result==9){
             setPopupHeaderSuccess('Withdrawal completed');
@@ -701,7 +715,7 @@ const MyPage = () => {
         console.log(result);
         if (result==1){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Last recorded date is before bonus start date');
+            setPopupText('Last public record date is before contract start date');
             setShowPopup(true);
         }
 
@@ -720,6 +734,12 @@ const MyPage = () => {
 		else if (result==4){
             setPopupHeader('Unable to withdraw');
             setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setShowPopup(true);
+        }
+
+		else if (result==5){
+            setPopupHeader('Unable to withdraw');
+            setPopupText('Last recorded date qualifies for bonus contract.');
             setShowPopup(true);
         }
 
