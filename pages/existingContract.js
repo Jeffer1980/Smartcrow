@@ -479,8 +479,12 @@ const withdrawseller = async(APN) => {
 	var finalurl=zillowurl+APN;
 	var result = await axios.get(finalurl);
 	console.log('Total = '+result['data']['total']);
-	var resultdate=result['data']['bundle'][0]['recordingDate'];
-	
+	try{
+		var resultdate=result['data']['bundle'][0]['recordingDate'];
+	}
+	catch{
+		var resultdate='1/1/2000'
+	}
 	
 	var resultdate2 = new Date(resultdate);
 	
@@ -527,6 +531,7 @@ const withdrawseller = async(APN) => {
 			console.log('Property sold on time');
 			return 5;
 		}
+		
 		else {
 			try{
 			var receipt = await MyContractwSigner.sellerwithdraw(APN,resulttimestamp)
@@ -547,7 +552,12 @@ const withdrawrealtor = async(APN) =>{
 	var finalurl=zillowurl+APN;
 	var result = await axios.get(finalurl);
 	
-	var resultdate=result['data']['bundle'][0]['recordingDate'];
+	try{
+		var resultdate=result['data']['bundle'][0]['recordingDate'];
+	}
+	catch{
+		var resultdate='1/1/2000'
+	}
 	//resultdate=resultdate.substring(0, resultdate.indexOf('T'))
 	var resultdate2 = new Date(resultdate);
 	var resulttimestamp = Math.floor(resultdate2.getTime()/1000);
@@ -691,7 +701,7 @@ const MyPage = () => {
 
 		else if (result==3){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Bonus no longer active');
+            setPopupText('Contract no longer active');
             setShowPopup(true);
         }
 
@@ -727,13 +737,13 @@ const MyPage = () => {
 
 		else if (result==3){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Bonus is no longer active');
+            setPopupText('Contract is no longer active');
             setShowPopup(true);
         }
 
 		else if (result==4){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Earliest withdraw date is 30 days after sell by date');
+            setPopupText('Earliest withdraw date is 30 days after sell by date due to processing times with county recording office');
             setShowPopup(true);
         }
 
@@ -742,6 +752,8 @@ const MyPage = () => {
             setPopupText('Last recorded date qualifies for bonus contract.');
             setShowPopup(true);
         }
+
+		
 
 		else if (result==9){
             setPopupHeaderSuccess('Withdrawal completed');
@@ -831,7 +843,7 @@ const MyPage = () => {
                     <li>Amount (ETH)</li>
                     <li>Start date</li>
                     <li>Sell by</li>
-                    <li>Seller Wallet</li>
+                    <li>Sender Wallet</li>
                     <li>Receiver Wallet</li>
                     <li>Still active</li>
                   </ul>
@@ -854,7 +866,7 @@ const MyPage = () => {
     				<button class="bg-white border border-default-border hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawSeller}>
 						<img src="/assets/images/sender.png" alt="New File Image" className="h-12 w-12" />
     				</button>
-    				<p className="text-default-text">Withdraw as Seller</p>
+    				<p className="text-default-text">Withdraw as Sender</p>
   				</div>
 				<div className="w-full sm:w-1/2 text-center mr-10">
     				<button class="bg-white border border-default-border hover:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg mb-4" onClick={handleWithdrawRealtor}>
