@@ -714,7 +714,7 @@ const MyPage = () => {
 		
 
 		else if (result==9){
-            setPopupHeaderSuccess('Withdrawal completed');
+            setPopupHeaderSuccess('Withdrawal Initiated. Final withdrawal confirmation will come from Metamask');
             //setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopupSuccess(true);
         }
@@ -749,14 +749,14 @@ const MyPage = () => {
 
 		else if (result==5){
             setPopupHeader('Unable to withdraw');
-            setPopupText('Last recorded date qualifies for bonus contract.');
+            setPopupText('Last recorded date meets terms of the contract.');
             setShowPopup(true);
         }
 
 		
 
 		else if (result==9){
-            setPopupHeaderSuccess('Withdrawal completed');
+            setPopupHeaderSuccess('Withdrawal Initiated. Final withdrawal confirmation will come from Metamask');
             //setPopupText('Earliest withdraw date is 30 days after sell by date');
             setShowPopupSuccess(true);
         }

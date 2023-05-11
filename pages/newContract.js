@@ -487,7 +487,7 @@ const MyForm = () => {
 		await MyContractwSigner.createBonusTest(APN,Realtor,Startdatetimestamp, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 		//await MyContractwSigner.createBonus(APN,Realtor, Selltimestamp,{value: ethers.utils.parseEther(Amount)}).then(receipt => {
 						console.log(receipt);
-						setPopupHeaderSuccess('Contract Created');
+						setPopupHeaderSuccess('Contract Initiated. Final contract confirmation will come from Metamask');
 						setShowPopupSuccess(true);
 						
 						
@@ -762,7 +762,11 @@ const MyForm = () => {
       }`} disabled={verificationfailed} onClick={createbonusfunc}>
 		  	        Create Contract
 		        </button>
+				
             </div>
+			<div className="p-6 flex items-center justify-center">
+				<p className='text-xs'>Once Create Contract button is pressed, all entered data is final and cannot be edited. Make sure all entered data is correct.</p>
+			</div>
           </div>
         </div>
 		
