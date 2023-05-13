@@ -765,7 +765,7 @@ const MyForm = () => {
 				
             </div>
 			<div className="p-6 flex items-center justify-center">
-				<p className='text-xs'>Once Create Contract button is pressed, all entered data is final and cannot be edited. Make sure all entered data is correct.</p>
+				<p className='text-xs text-red-700'>Once Create Contract button is pressed, all entered data is final and cannot be edited. Make sure all entered data is correct.</p>
 			</div>
           </div>
         </div>
