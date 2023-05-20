@@ -647,6 +647,9 @@ const HomePage = () => {
     			<p className="text-default-text">Existing Contract</p>
   			</div>
 		  </section>
+		  <footer className="flex justify-center pt-5">
+			<a href='https://www.smartcrow.info' className='font-semibold text-default-bt-text'>About</a>
+		  </footer>
 		</main>
 		{showBalloon && (
                 <PopupInfo text={balloonText} closeModal={handleCloseBalloon} isOpen={showBalloon}/>
